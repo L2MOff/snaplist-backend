@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapList AI - Test</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f4f4f9; }
+        .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
+        h1 { color: #333; }
+        input[type="file"] { margin: 20px 0; }
+        button { background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+        #resultat { margin-top: 20px; text-align: left; white-space: pre-wrap; background: #eee; padding: 15px; border-radius: 5px; display: none; }
+        .loading { color: #888; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>📸 SnapList AI</h1>
+        <p>Prends une photo d'un objet à vendre</p>
+        
+        <input type="file" id="imageInput" accept="image/*">
+        <br>
+        <button onclick="analyserImage()">✨ Analyser & Estimer le prix</button>
+
+        <p id="loading" class="loading">L'IA analyse ton objet... (ça peut prendre 5-10 sec)</p>
+        <div id="resultat"></div>
+    </div>
+
+    <script>
+        async function analyserImage() {
+            const input = document.getElementById('imageInput');
+            const resultDiv = document.getElementById('resultat');
+            const loading = document.getElementById('loading');
+
+            if (input.files.length === 0) {
+                alert("Sélectionne une image d'abord !");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", input.files[0]);
+
+            loading.style.display = "block";
+            resultDiv.style.display = "none";
+
+            try {
+                const response = await fetch("http://127.0.0.1:8000/analyze", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await response.json();
+                loading.style.display = "none";
+                
+                if (data.resultat) {
+                    resultDiv.style.display = "block";
+                    resultDiv.textContent = data.resultat;
+                } else if (data.erreur) {
+                    alert("Erreur IA : " + data.erreur);
+                }
+            } catch (error) {
+                loading.style.display = "none";
+                alert("Erreur de connexion au serveur ! Vérifie que le terminal tourne bien.");
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>
