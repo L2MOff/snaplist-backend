@@ -5,7 +5,7 @@ import * as Clipboard from 'expo-clipboard';
 import axios from 'axios';
 
 // ⚠️ Vérifie que c'est bien ta bonne adresse Ngrok ici !
-const API_URL = 'https://loessial-interestingly-davon.ngrok-free.dev'; 
+const API_URL = 'https://snaplist-api.onrender.com'; 
 
 export default function HomeScreen() {
   const [image, setImage] = useState(null);

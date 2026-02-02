@@ -11,7 +11,9 @@ import urllib.parse
 import time # 👇 On a besoin de ça pour le "Cache Buster"
 
 # Ta clé API
-API_KEY = "AIzaSyDpU4DC43VEjz2o6Ou6g1UFI3IrsPbM2Is"
+API_KEY = os.getenv("GOOGLE_API_KEY")
+if not API_KEY:
+    raise ValueError("La clé API Google est introuvable !")
 genai.configure(api_key=API_KEY)
 
 # Modèle
